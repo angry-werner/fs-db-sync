@@ -1,0 +1,4 @@
+.idea
+fs-db-sync.iml
+node_modules
+dist
