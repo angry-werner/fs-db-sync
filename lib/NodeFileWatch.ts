@@ -1,6 +1,6 @@
 import * as Fs from 'fs';
 
-export class Doodle {
+export class NodeFileWatch {
     public static main() : void {
         Fs.watch('/home/kow/test', {}, (eventType: string, fileName: string) => {
             if(fileName) {
@@ -10,4 +10,4 @@ export class Doodle {
     }
 }
 
-Doodle.main();
+NodeFileWatch.main();
