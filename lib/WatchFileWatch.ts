@@ -1,10 +1,12 @@
 import * as Watch from 'watch';
+import * as Fs from 'fs';
 import {Stats} from 'fs';
 import BeeQueue = require("bee-queue");
 
 export class WatchFileWatch {
     private static readonly MAX_ENTRIES = 10000;
     private static readonly ROOT = '/home/kow/test';
+    private static readonly DONE = '/home/kow/done';
     private static fileNames : string[] = [];
     private static readonly queue = new BeeQueue('file-queue', {redis: {host: 'louie'}});
 
@@ -15,7 +17,10 @@ export class WatchFileWatch {
     private doIt() : void {
         Watch.watchTree(WatchFileWatch.ROOT, this.handleEvent);
         WatchFileWatch.queue.process<string>((job, done) => {
-            console.log(job.data);
+            console.log('Processing: ' + job.data);
+            Fs.rename(job.data, WatchFileWatch.DONE + job.data.slice(WatchFileWatch.ROOT.length), (anError) => {
+                if (anError) console.log('In error: ' + anError)
+            });
             done(null, job.data);
         });
     }
